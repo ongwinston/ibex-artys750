@@ -43,6 +43,15 @@ filesets:
       - rtl/fpga/rst_ctrl.sv
     file_type: systemVerilogSource
 
+  files_xilinx_artys750:
+    depend:
+      - lowrisc:ibex:rv_timer
+      - lowrisc:ibex:fpga_xilinx_shared
+    files:
+      - rtl/fpga/top_artys750.sv
+    file_type: systemVerilogSource
+
+
   files_verilator:
     depend:
       - lowrisc:ibex:sim_shared
@@ -76,6 +85,11 @@ filesets:
   files_constraints_sonata:
     files:
       - data/pins_sonata.xdc
+    file_type: xdc
+
+  files_constraints_artys750:
+    files:
+      - data/pins_artys750.xdc
     file_type: xdc
 
 parameters:
@@ -160,6 +174,22 @@ targets:
     parameters:
       - SRAMInitFile
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
+  synth_artys750:
+    <<: *default_target
+    default_tool: vivado
+    filesets_append:
+      - files_xilinx_artys750
+      - files_constraints_artys750
+    toplevel: top_artys750
+    tools:
+      vivado:
+        part: "xc7s50csga324-1"
+    parameters:
+      - SRAMInitFile
+      - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
+    flags:
+      use_bscane_tap: true
+
 
   sim:
     <<: *default_target
