@@ -509,8 +509,11 @@ module ibex_demo_system #(
     endfunction
   `endif
 
+`ifdef VERILATOR
   initial begin
     $dumpfile("ibex-wave.vcd");
     $dumpvars();
   end
+`endif
+
 endmodule
