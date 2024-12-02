@@ -508,4 +508,9 @@ module ibex_demo_system #(
       return u_top.u_ibex_core.cs_registers_i.mhpmcounter[index];
     endfunction
   `endif
+
+  initial begin
+    $dumpfile("ibex-wave.vcd");
+    $dumpvars();
+  end
 endmodule
