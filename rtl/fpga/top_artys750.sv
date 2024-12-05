@@ -13,7 +13,8 @@ module top_artys750 #(
   input  [ 3:0] BTN,
   output [ 3:0] LED,
   // output [11:0] RGB_LED,
-  // output [ 3:0] DISP_CTRL,
+  output [2:0]  RGB_LED0,
+  output [2:0]  RGB_LED1,
   input         UART_RX,
   output        UART_TX,
   input         SPI_RX,
@@ -25,6 +26,9 @@ module top_artys750 #(
 
   logic [3:0] DISP_CTRL; // Do nothing
   logic [11:0] RGB_LED;
+
+  assign RGB_LED0 = RGB_LED[2:0];
+  assign RGB_LED1 = RGB_LED[4:2];
 
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
