@@ -518,6 +518,52 @@ module ibex_demo_system #(
     endfunction
   `endif
 
+
+////////////////////////////////////////////////////////////
+// Wishbone Xbar
+////////////////////////////////////////////////////////////
+
+  wbxbar #(
+    .NM(),
+    .NS(),
+    .AW(),
+    .DW(),
+    .SLAVE_ADDR(),
+    .SLAVE_MASK(),
+    .LGMAXBURST(),
+    .OPT_TIMEOUT(),
+    .OPT_STARVATION_TIMEOUT(),
+    .OPT_DBLBUFFER(),
+    .OPT_LOWPOWER()
+  ) wishbone_xbar_inst (
+    .i_clk(),
+    .i_reset(),
+    .i_mcyc(),
+    .i_mstb(),
+    .i_mwe(),
+    .i_maddr(),
+    .i_mdata(),
+    .i_msel(),
+    .o_mstall(),
+    .o_mack(),
+    .o_mdata(),
+    .o_merr(),
+    .o_scyc(),
+    .o_sstb(),
+    .o_swe(),
+    .o_saddr(),
+    .o_sdata(),
+    .o_ssel(),
+    .i_sstall(),
+    .i_sack(),
+    .i_sdata(),
+    .i_serr()
+  );
+
+////////////////////////////////////////////////////////////
+// Wave dump 
+////////////////////////////////////////////////////////////
+
 `ifdef VERILATOR
   initial begin
     $dumpfile("ibex-wave.vcd");
