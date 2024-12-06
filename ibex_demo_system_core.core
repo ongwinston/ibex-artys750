@@ -9,6 +9,7 @@ filesets:
     depend:
       - lowrisc:ibex:ibex_top
       - pulp:riscv:debug_module
+      - wb2axip:wb:wbm2axisp
     files:
       - rtl/system/jtag_id_pkg.sv
       - rtl/system/ibex_demo_system.sv
