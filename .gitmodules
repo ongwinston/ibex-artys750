@@ -1,0 +1,6 @@
+[submodule "sub-repos/quick_silicon"]
+	path = sub-repos/quick_silicon
+	url = git@github.com:ongwinston/quick_silicon.git
+[submodule "sub-repos/wb2axip"]
+	path = sub-repos/wb2axip
+	url = git@github.com:ZipCPU/wb2axip.git
