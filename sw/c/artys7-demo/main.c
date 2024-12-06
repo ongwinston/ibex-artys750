@@ -48,6 +48,19 @@ void pwm_example() {
 
 }
 
+int wishbone_master_test() {
+    volatile uint32_t* wishboneBasePtr = 0x80005000;
+    
+    // Write to wishbone
+    *wishboneBasePtr = 0x12345678;
+
+
+    // Read from wishbone
+    volatile uint32_t value = *wishboneBasePtr;
+
+    return 0;
+}
+
 int main(void) {
 
     // Create pointer to Memory location and write to it
@@ -58,15 +71,16 @@ int main(void) {
     volatile uint32_t* gpioptr = GPIO_BASE_ADDR;
     *gpioptr = 0xbad0beef; 
 
-    // Exit
-    puts("Hello Opal Test");
+    // // Exit
+    // puts("Hello Opal Test");
 
-    pwm_example();
+    // pwm_example();
+    int status = wishbone_master_test();
 
     // Delay to allow UART to finish transmitting
-    for(int i=0; i < 10000; i++) {
+    for(int i=0; i < 1000; i++) {
         asm volatile("nop");
     }
 
-    return 0;
+    return status;
 }

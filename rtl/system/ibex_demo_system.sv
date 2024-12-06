@@ -71,6 +71,10 @@ module ibex_demo_system #(
   parameter logic [31:0] SIM_CTRL_START = 32'h20000;
   parameter logic [31:0] SIM_CTRL_MASK  = ~(SIM_CTRL_SIZE-1);
 
+  parameter logic [31:0] WISHBONEM_SIZE  =  4 * 1024; //  4 KiB
+  parameter logic [31:0] WISHBONEM_START = 32'h80005000;
+  parameter logic [31:0] WISHBONEM_MASK  = ~(WISHBONEM_SIZE-1);
+
   // Debug functionality is optional.
   localparam bit DBG = 1;
   localparam int unsigned DbgHwBreakNum = (DBG == 1) ?    2 :    0;
@@ -89,10 +93,11 @@ module ibex_demo_system #(
     Timer,
     Spi,
     SimCtrl,
-    DbgDev
+    DbgDev,
+    WishBoneM
   } bus_device_e;
 
-  localparam int NrDevices = DBG ? 8 : 7;
+  localparam int NrDevices = DBG ? 9 : 8;
   localparam int NrHosts   = DBG ? 2 : 1;
 
   // Interrupts.
@@ -150,20 +155,23 @@ module ibex_demo_system #(
   logic [31:0] cfg_device_addr_base [NrDevices];
   logic [31:0] cfg_device_addr_mask [NrDevices];
 
-  assign cfg_device_addr_base[Ram]     = MEM_START;
-  assign cfg_device_addr_mask[Ram]     = MEM_MASK;
-  assign cfg_device_addr_base[Gpio]    = GPIO_START;
-  assign cfg_device_addr_mask[Gpio]    = GPIO_MASK;
-  assign cfg_device_addr_base[Pwm]     = PWM_START;
-  assign cfg_device_addr_mask[Pwm]     = PWM_MASK;
-  assign cfg_device_addr_base[Uart]    = UART_START;
-  assign cfg_device_addr_mask[Uart]    = UART_MASK;
-  assign cfg_device_addr_base[Timer]   = TIMER_START;
-  assign cfg_device_addr_mask[Timer]   = TIMER_MASK;
-  assign cfg_device_addr_base[Spi]     = SPI_START;
-  assign cfg_device_addr_mask[Spi]     = SPI_MASK;
-  assign cfg_device_addr_base[SimCtrl] = SIM_CTRL_START;
-  assign cfg_device_addr_mask[SimCtrl] = SIM_CTRL_MASK;
+  assign cfg_device_addr_base[Ram]       = MEM_START;
+  assign cfg_device_addr_mask[Ram]       = MEM_MASK;
+  assign cfg_device_addr_base[Gpio]      = GPIO_START;
+  assign cfg_device_addr_mask[Gpio]      = GPIO_MASK;
+  assign cfg_device_addr_base[Pwm]       = PWM_START;
+  assign cfg_device_addr_mask[Pwm]       = PWM_MASK;
+  assign cfg_device_addr_base[Uart]      = UART_START;
+  assign cfg_device_addr_mask[Uart]      = UART_MASK;
+  assign cfg_device_addr_base[Timer]     = TIMER_START;
+  assign cfg_device_addr_mask[Timer]     = TIMER_MASK;
+  assign cfg_device_addr_base[Spi]       = SPI_START;
+  assign cfg_device_addr_mask[Spi]       = SPI_MASK;
+  assign cfg_device_addr_base[SimCtrl]   = SIM_CTRL_START;
+  assign cfg_device_addr_mask[SimCtrl]   = SIM_CTRL_MASK;
+  assign cfg_device_addr_base[WishBoneM] = WISHBONEM_START;
+  assign cfg_device_addr_mask[WishBoneM] = WISHBONEM_MASK;
+
 
   if (DBG) begin : g_dbg_device_cfg
     assign cfg_device_addr_base[DbgDev] = DEBUG_START;
@@ -172,12 +180,13 @@ module ibex_demo_system #(
   end
 
   // Tie-off unused error signals.
-  assign device_err[Ram]     = 1'b0;
-  assign device_err[Gpio]    = 1'b0;
-  assign device_err[Pwm]     = 1'b0;
-  assign device_err[Uart]    = 1'b0;
-  assign device_err[Spi]     = 1'b0;
-  assign device_err[SimCtrl] = 1'b0;
+  assign device_err[Ram]       = 1'b0;
+  assign device_err[Gpio]      = 1'b0;
+  assign device_err[Pwm]       = 1'b0;
+  assign device_err[Uart]      = 1'b0;
+  assign device_err[Spi]       = 1'b0;
+  assign device_err[SimCtrl]   = 1'b0;
+  assign device_err[WishBoneM] = 1'b0;
 
   bus #(
     .NrDevices    ( NrDevices ),
