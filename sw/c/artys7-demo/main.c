@@ -49,7 +49,7 @@ void pwm_example() {
 }
 
 int wishbone_master_test() {
-    volatile uint32_t* wishboneBasePtr = 0x80005000;
+    volatile uint32_t* wishboneBasePtr = (volatile uint32_t*)0x80005000;
     
     // Write to wishbone
     *wishboneBasePtr = 0x12345678;
@@ -64,11 +64,11 @@ int wishbone_master_test() {
 int main(void) {
 
     // Create pointer to Memory location and write to it
-    volatile uint32_t* memptr = 0x44a00000;
+    volatile uint32_t* memptr = (volatile uint32_t*)0x44a00000;
     *memptr = 0xdeadc0de;
 
     // Writes to GPIO
-    volatile uint32_t* gpioptr = GPIO_BASE_ADDR;
+    volatile uint32_t* gpioptr = (volatile uint32_t*)GPIO_BASE_ADDR;
     *gpioptr = 0xbad0beef; 
 
     // // Exit
