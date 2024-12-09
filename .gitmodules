@@ -1,0 +1,3 @@
+[submodule "sub-repos/wb2axip"]
+	path = sub-repos/wb2axip
+	url = git@github.com:ongwinston/wb2axip.git
