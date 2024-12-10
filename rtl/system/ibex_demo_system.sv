@@ -520,6 +520,49 @@ module ibex_demo_system #(
 
 
 ////////////////////////////////////////////////////////////
+// Wishbone Ibex Bridge Master
+////////////////////////////////////////////////////////////
+
+wb_bridge_master #(
+   .DATA_WIDTH(32),
+   .ADDR_WIDTH(32)
+) wb_bridge_master_inst (
+  .clk_i                  (clk_sys_i),
+  .reset_i                (rst_sys_ni),
+
+  // To From Ibex Core
+  .data_req_i             (host_req[CoreD]),
+  .data_gnt_o             (host_gnt[CoreD]),
+
+  .data_we_i              (host_we[CoreD]),
+  .data_be_i              (host_be[CoreD]),
+  .data_addr_i            (host_addr[CoreD]),
+  .data_wdata_i           (host_wdata[CoreD]),
+  .data_wdata_intg_i      (/*UNUSED*/),
+
+  .data_rdata_o           (),
+  .data_rdata_intg_o      (),
+  .data_rvalid_o          (host_rvalid[CoreD]),
+  .data_err_o             (),
+
+  // To Wishbone Xbar Requests
+  .mcyc_o                 (),
+  .mstb_o                 (),
+  .mwe_o                  (),
+  .maddr_o                (),
+  .mdata_o                (),
+  .msel_o                 (),
+
+  // Wishbone Xbar Response
+  .mstall_i               (),
+  .mack_i                 (),
+  .mdata_i                (),
+  .merr_i                 ()
+
+);
+
+
+////////////////////////////////////////////////////////////
 // Wishbone Xbar
 ////////////////////////////////////////////////////////////
 
@@ -538,22 +581,30 @@ module ibex_demo_system #(
   ) wishbone_xbar_inst (
     .i_clk(),
     .i_reset(),
+
+    // Inputs from Masters
     .i_mcyc(),
     .i_mstb(),
     .i_mwe(),
     .i_maddr(),
     .i_mdata(),
     .i_msel(),
+
+    // Output to Master Slave Response
     .o_mstall(),
     .o_mack(),
     .o_mdata(),
     .o_merr(),
+
+    // Outputs to Slave
     .o_scyc(),
     .o_sstb(),
     .o_swe(),
     .o_saddr(),
     .o_sdata(),
     .o_ssel(),
+
+     // Responses from Slave
     .i_sstall(),
     .i_sack(),
     .i_sdata(),

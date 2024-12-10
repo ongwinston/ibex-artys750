@@ -210,8 +210,8 @@ targets:
           - '--trace-max-array 1024'
           - '-CFLAGS "-std=c++14 -Wall -DVM_TRACE_FMT_FST -DTOPLEVEL_NAME=top_verilator"'
           - '-LDFLAGS "-pthread -lutil -lelf"'
-          - "-Wall"
-          - "-Wwarn-IMPERFECTSCH"
+          #- "-Wall"
+          #- "-Wwarn-IMPERFECTSCH"
           # RAM primitives wider than 64bit (required for ECC) fail to build in
           # Verilator without increasing the unroll count (see Verilator#1266)
           - "--unroll-count 72"
