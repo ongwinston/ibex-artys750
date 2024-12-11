@@ -22,6 +22,7 @@ filesets:
       - rtl/system/spi_host.sv
       - rtl/system/spi_top.sv
       - rtl/system/wb_bridge_master.sv
+      - rtl/system/wbxbar_wrapper.sv
     file_type: systemVerilogSource
 
 targets:
