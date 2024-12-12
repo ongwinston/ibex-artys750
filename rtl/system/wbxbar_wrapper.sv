@@ -123,36 +123,37 @@ module wbxbar_wrapper #(
 // Wishbone Xbar
 ////////////////////////////////////////////////////////////
 
-  logic [NrHosts-1:0] wb_m_cyc, wb_m_stb, wb_m_we; // Number of Masters (Ibex Top and DBG)
-  logic [NrHosts*AddressWidth-1:0] wb_m_addr;
-  logic [NrDevices*DataWidth-1:0] wb_m_data;
-  logic [NrDevices*(DataWidth/8-1):0] wb_m_sel;
+  logic [NrHosts-1 : 0] wb_m_cyc, wb_m_stb, wb_m_we; // Number of Masters (Ibex Top and DBG)
+  logic [(NrHosts*AddressWidth)-1 : 0] wb_m_addr;
+  logic [(NrHosts*DataWidth)-1 : 0] wb_m_data;
+  logic [NrHosts*(DataWidth/8)-1 : 0] wb_m_sel;
 
-  logic [NrDevices-1:0] wb_xbar_stall;
-  logic [NrDevices-1:0] wb_xbar_ack;
-  logic [NrDevices-1:0] wb_xbar_data;
-  logic [NrDevices-1:0] wb_xbar_err;
+  logic [NrHosts-1:0] wb_xbar_stall;
+  logic [NrHosts-1:0] wb_xbar_ack;
+  logic [NrHosts-1:0] [DataWidth-1:0]wb_xbar_data;
+  logic [NrHosts-1:0] wb_xbar_err;
 
 
   logic [NrDevices-1:0] scyc;
   logic [NrDevices-1:0] sstb;
   logic [NrDevices-1:0] swe;
-  logic [NrDevices-1:0] saddr;
-  logic [NrDevices-1:0] sdata;
-  logic [NrDevices-1:0] ssel;
+  logic [NrDevices-1:0] [AddressWidth-1 : 0] saddr;
+  logic [NrDevices-1:0] [DataWidth-1 : 0] sdata;
+  logic [NrDevices-1:0] [(DataWidth/8)-1 : 0]ssel;
 
   genvar N, NSlaves;
   // NrHosts:
   // - CoreD
   // - DbgHost
   generate
-    for(N=0; N<NrHosts; N=N+1) begin: gen_flatten_cyc
+    for(N=0; N<NrHosts; N=N+1) begin: gen_flatten_hosts
       assign wb_m_cyc[N +: 1] = host_req_i[N];
       assign wb_m_stb[N +: 1] = host_req_i[N];
       assign wb_m_we[N +: 1] = host_we_i[N];
-      assign wb_m_addr[N*AddressWidth +: 1] = host_addr_i[N];
+      assign wb_m_addr[(N*AddressWidth) +: AddressWidth] = host_addr_i[N];
+      assign wb_m_data[(N*DataWidth) +: DataWidth] = host_wdata_i[N];
+      assign wb_m_sel[N*(DataWidth/8) +: (DataWidth/8)] = host_be_i[N];
     end
-
   endgenerate
 
 
