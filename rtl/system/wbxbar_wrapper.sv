@@ -50,7 +50,6 @@ module wbxbar_wrapper #(
 
   // Devices (slaves)
   output logic                    device_req_o    [NrDevices],
-
   output logic [AddressWidth-1:0] device_addr_o   [NrDevices],
   output logic                    device_we_o     [NrDevices],
   output logic [ DataWidth/8-1:0] device_be_o     [NrDevices],
@@ -123,39 +122,110 @@ module wbxbar_wrapper #(
 // Wishbone Xbar
 ////////////////////////////////////////////////////////////
 
-  logic [NrHosts-1 : 0] wb_m_cyc, wb_m_stb, wb_m_we; // Number of Masters (Ibex Top and DBG)
+
+  logic [NrHosts-1 : 0]                wb_m_cyc, wb_m_stb, wb_m_we;
   logic [(NrHosts*AddressWidth)-1 : 0] wb_m_addr;
-  logic [(NrHosts*DataWidth)-1 : 0] wb_m_data;
-  logic [NrHosts*(DataWidth/8)-1 : 0] wb_m_sel;
+  logic [(NrHosts*DataWidth)-1 : 0]    wb_m_data;
+  logic [NrHosts*(DataWidth/8)-1 : 0]  wb_m_sel;
 
-  logic [NrHosts-1:0] wb_xbar_stall;
-  logic [NrHosts-1:0] wb_xbar_ack;
-  logic [NrHosts-1:0] [DataWidth-1:0]wb_xbar_data;
-  logic [NrHosts-1:0] wb_xbar_err;
+  logic [NrHosts-1:0]                  wb_xbar_stall;
+  logic [NrHosts-1:0]                  wb_xbar_ack;
+  logic [(NrHosts*DataWidth)-1 : 0]    wb_xbar_data;
+  logic [NrHosts-1:0]                  wb_xbar_err;
 
 
-  logic [NrDevices-1:0] scyc;
-  logic [NrDevices-1:0] sstb;
-  logic [NrDevices-1:0] swe;
-  logic [NrDevices-1:0] [AddressWidth-1 : 0] saddr;
-  logic [NrDevices-1:0] [DataWidth-1 : 0] sdata;
-  logic [NrDevices-1:0] [(DataWidth/8)-1 : 0]ssel;
+  logic [NrDevices-1 : 0]                 scyc;
+  logic [NrDevices-1 : 0]                 sstb;
+  logic [NrDevices-1 : 0]                 swe;
+  logic [(NrDevices*AddressWidth)-1 : 0]  saddr;
+  logic [(NrDevices*DataWidth)-1 : 0]     sdata;
+  logic [(NrDevices*(DataWidth/8))-1 : 0] ssel;
 
-  genvar N, NSlaves;
+  // Slave Responses
+  // Create a stall signal
+  // error signal
+  logic [NrDevices-1 : 0]                 sDevice_valid;
+  logic [(NrDevices*DataWidth)-1 : 0]     sDevice_rdata;
+  logic [NrDevices-1 : 0]                 sDevice_err;
+  logic [NrDevices-1:0]                   sDevice_stall;
+
+  logic [NrHosts-1:0]                     request_in;
+
+  always_ff @( posedge clk_i ) begin : request_flop
+    if(!rst_ni) begin
+      request_in <= 'd0;
+    end else begin
+      if(host_req_i[0]) begin
+        request_in[0] <= 1'd1;
+      end
+      if(request_in[0] & wb_xbar_ack[0]) begin
+        request_in[0]<= 1'd0;
+      end
+      if(host_req_i[1]) begin
+        request_in[1] <= 1'd1;
+      end
+      if(request_in[1] & wb_xbar_ack[1]) begin
+        request_in[1]<= 1'd0;
+      end
+
+    end
+  end
+
+  genvar IdxHost;
   // NrHosts:
   // - CoreD
   // - DbgHost
   generate
-    for(N=0; N<NrHosts; N=N+1) begin: gen_flatten_hosts
-      assign wb_m_cyc[N +: 1] = host_req_i[N];
-      assign wb_m_stb[N +: 1] = host_req_i[N];
-      assign wb_m_we[N +: 1] = host_we_i[N];
-      assign wb_m_addr[(N*AddressWidth) +: AddressWidth] = host_addr_i[N];
-      assign wb_m_data[(N*DataWidth) +: DataWidth] = host_wdata_i[N];
-      assign wb_m_sel[N*(DataWidth/8) +: (DataWidth/8)] = host_be_i[N];
+    for(IdxHost=0; IdxHost<NrHosts; IdxHost=IdxHost+1) begin: gen_flatten_hosts
+      assign wb_m_cyc[IdxHost +: 1] = request_in[IdxHost];
+      assign wb_m_stb[IdxHost +: 1] = request_in[IdxHost];
+      assign wb_m_we[IdxHost +: 1] = host_we_i[IdxHost];
+      assign wb_m_addr[(IdxHost*AddressWidth) +: AddressWidth] = host_addr_i[IdxHost];
+      assign wb_m_data[(IdxHost*DataWidth) +: DataWidth] = host_wdata_i[IdxHost];
+      assign wb_m_sel[IdxHost*(DataWidth/8) +: (DataWidth/8)] = host_be_i[IdxHost];
+
+      // Wb Slave -> Host core
+      assign host_rvalid_o[IdxHost] = wb_xbar_ack[IdxHost];
+      assign host_rdata_o[IdxHost] = wb_xbar_data[(IdxHost*DataWidth) +: DataWidth];
+      assign host_err_o[IdxHost] = wb_xbar_err[IdxHost];
+
     end
   endgenerate
 
+  // assign host_gnt_o[0] = sDevice_valid[0] & !wb_xbar_stall[0];// TODO: Arbitrate the gnt signal to either Core or Dbg
+  assign host_gnt_o[0] = scyc[0] & sstb[0] & !sDevice_stall[0] & host_req_i[0];
+
+  // Register to keep track of transactions completed
+  logic transaction_in_prog;
+  always_ff @( posedge clk_i ) begin
+    if(!rst_ni) begin
+      transaction_in_prog <= 'd0;
+    end else begin
+      if(!scyc[0] && transaction_in_prog) begin
+        transaction_in_prog <= 1'd0;
+      end else begin
+        if(scyc[0] & !transaction_in_prog) transaction_in_prog <= 1'd1;
+      end
+    end
+    
+  end
+
+  // Generate Xbar to Slave interface
+  genvar  IdxSlaves;
+  generate
+    for(IdxSlaves = 0; IdxSlaves < NrDevices; IdxSlaves = IdxSlaves + 1) begin : gen_split_slaves
+      assign device_req_o[IdxSlaves] = scyc[IdxSlaves] & sstb[IdxSlaves] && !transaction_in_prog;
+      assign device_addr_o[IdxSlaves] = saddr[(IdxSlaves*AddressWidth) +: AddressWidth];
+      assign device_we_o[IdxSlaves] = swe[IdxSlaves];
+      assign device_be_o[IdxSlaves] = ssel[IdxSlaves*(DataWidth/8) +: (DataWidth/8)];
+      assign device_wdata_o[IdxSlaves] = sdata[(IdxSlaves*DataWidth) +: DataWidth];
+
+      // SlaveData
+      assign sDevice_valid[IdxSlaves] = device_rvalid_i[IdxSlaves];
+      assign sDevice_rdata[IdxSlaves*DataWidth +: DataWidth] = device_rdata_i[IdxSlaves];
+      assign sDevice_err[IdxSlaves] = device_err_i[IdxSlaves];
+    end
+  endgenerate
 
   wbxbar #(
     .NM(NrHosts),
@@ -182,7 +252,7 @@ module wbxbar_wrapper #(
     .o_mdata             (wb_xbar_data),
     .o_merr              (wb_xbar_err),
 
-    // Outputs to Slave
+    // WB Requests to Slaves
     .o_scyc               (scyc),
     .o_sstb               (sstb),
     .o_swe                (swe),
@@ -191,10 +261,10 @@ module wbxbar_wrapper #(
     .o_ssel               (ssel),
 
      // Responses from Slave
-    .i_sstall             ('d0),
-    .i_sack               ('d0),
-    .i_sdata              ('d0),
-    .i_serr               ('d0)
+    .i_sstall             (sDevice_stall),
+    .i_sack               (sDevice_valid),
+    .i_sdata              (sDevice_rdata),
+    .i_serr               (sDevice_err)
   );
 
 

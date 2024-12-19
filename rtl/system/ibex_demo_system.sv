@@ -188,6 +188,9 @@ module ibex_demo_system #(
   assign device_err[SimCtrl]   = 1'b0;
   assign device_err[WishBoneM] = 1'b0;
 
+`define WISHBONE_BUS
+
+`ifdef WISHBONE_BUS
   wbxbar_wrapper #(
     .NrDevices    (NrDevices),
     .NrHosts      (NrHosts),
@@ -238,6 +241,38 @@ module ibex_demo_system #(
     .device_rdata_i (device_rdata ),
     .device_err_i   (device_err   )
   );
+  `else
+  bus #(
+    .NrDevices    (NrDevices),
+    .NrHosts      (NrHosts),
+    .DataWidth    (32),
+    .AddressWidth (32)
+    ) u_bus (
+    .clk_i (clk_sys_i),
+    .rst_ni(rst_sys_ni),
+
+    .host_req_i   (host_req     ),
+    .host_gnt_o   (host_gnt     ),
+    .host_addr_i  (host_addr    ),
+    .host_we_i    (host_we      ),
+    .host_be_i    (host_be      ),
+    .host_wdata_i (host_wdata   ),
+    .host_rvalid_o(host_rvalid  ),
+    .host_rdata_o (host_rdata   ),
+    .host_err_o   (host_err     ),
+
+    .device_req_o   (device_req   ),
+    .device_addr_o  (device_addr  ),
+    .device_we_o    (device_we    ),
+    .device_be_o    (device_be    ),
+    .device_wdata_o (device_wdata ),
+    .device_rvalid_i(device_rvalid),
+    .device_rdata_i (device_rdata ),
+    .device_err_i   (device_err   ),
+    .cfg_device_addr_base,
+    .cfg_device_addr_mask
+  );
+  `endif
 
   assign mem_instr_req =
       core_instr_req & ((core_instr_addr & cfg_device_addr_mask[Ram]) == cfg_device_addr_base[Ram]);

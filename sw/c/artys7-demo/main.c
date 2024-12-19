@@ -57,6 +57,8 @@ int wishbone_master_test() {
 
     // Read from wishbone
     volatile uint32_t value = *wishboneBasePtr;
+    puts("Value:");
+    puthex(value);
 
     return 0;
 }
