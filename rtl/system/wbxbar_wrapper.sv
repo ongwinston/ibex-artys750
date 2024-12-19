@@ -59,70 +59,6 @@ module wbxbar_wrapper #(
   input                           device_err_i    [NrDevices]
 );
 
-
-////////////////////////////////////////////////////////////
-// Wishbone Ibex Bridge Master
-////////////////////////////////////////////////////////////
-  
-//   // Wb to Ibex
-//   logic [31:0] wb_data;
-//   logic wb_data_intg, wb_data_err;
-
-  
-//   logic [31:0] wb_m_data;
-//   logic wb_m_data_intg, wb_m_data_err;
-//   logic wb_m_cyc, wb_m_stb, wb_m_we;
-//   logic [3:0] wb_m_sel;
-//   logic [31:0] wb_m_addr;
-
-//   logic wb_xbar_stall, wb_xbar_ack, wb_xbar_err;
-//   logic [31:0] wb_xbar_data;
-
-
-//   wb_bridge_master #(
-//    .DATA_WIDTH(32),
-//    .ADDR_WIDTH(32)
-//   ) wb_bridge_master_inst (
-//     .clk_i                  (clk_sys_i),
-//     .reset_i                (!rst_sys_ni),
-
-//     // To From Ibex Core
-//     .data_req_i             (host_req[CoreD]),
-//     .data_gnt_o             (host_gnt[CoreD]),
-
-//     .data_we_i              (host_we[CoreD]),
-//     .data_be_i              (host_be[CoreD]),
-//     .data_addr_i            (host_addr[CoreD]),
-//     .data_wdata_i           (host_wdata[CoreD]),
-//     .data_wdata_intg_i      (1'bz),
-
-//     .data_rdata_o           (wb_data),
-//     .data_rdata_intg_o      (wb_data_intg),
-//     .data_rvalid_o          (host_rvalid[CoreD]),
-//     .data_err_o             (wb_data_err),
-
-//     // To Wishbone Xbar Requests
-//     .mcyc_o                 (wb_m_cyc),
-//     .mstb_o                 (wb_m_stb),
-//     .mwe_o                  (wb_m_we),
-//     .maddr_o                (wb_m_addr),
-//     .mdata_o                (wb_m_data),
-//     .msel_o                 (wb_m_sel),
-
-//     // Wishbone Xbar Response
-//     .mstall_i               (wb_xbar_stall),
-//     .mack_i                 (wb_xbar_ack),
-//     .mdata_i                (wb_xbar_data),
-//     .merr_i                 (wb_xbar_err)
-
-// );
-
-
-////////////////////////////////////////////////////////////
-// Wishbone Xbar
-////////////////////////////////////////////////////////////
-
-
   logic [NrHosts-1 : 0]                wb_m_cyc, wb_m_stb, wb_m_we;
   logic [(NrHosts*AddressWidth)-1 : 0] wb_m_addr;
   logic [(NrHosts*DataWidth)-1 : 0]    wb_m_data;
@@ -151,26 +87,6 @@ module wbxbar_wrapper #(
 
   logic [NrHosts-1:0]                     request_in;
 
-  always_ff @( posedge clk_i ) begin : request_flop
-    if(!rst_ni) begin
-      request_in <= 'd0;
-    end else begin
-      if(host_req_i[0]) begin
-        request_in[0] <= 1'd1;
-      end
-      if(request_in[0] & wb_xbar_ack[0]) begin
-        request_in[0]<= 1'd0;
-      end
-      if(host_req_i[1]) begin
-        request_in[1] <= 1'd1;
-      end
-      if(request_in[1] & wb_xbar_ack[1]) begin
-        request_in[1]<= 1'd0;
-      end
-
-    end
-  end
-
   genvar IdxHost;
   // NrHosts:
   // - CoreD
@@ -189,11 +105,26 @@ module wbxbar_wrapper #(
       assign host_rdata_o[IdxHost] = wb_xbar_data[(IdxHost*DataWidth) +: DataWidth];
       assign host_err_o[IdxHost] = wb_xbar_err[IdxHost];
 
-    end
-  endgenerate
+      assign host_gnt_o[IdxHost] = |scyc & |sstb & !|sDevice_stall & host_req_i[IdxHost];
 
-  // assign host_gnt_o[0] = sDevice_valid[0] & !wb_xbar_stall[0];// TODO: Arbitrate the gnt signal to either Core or Dbg
-  assign host_gnt_o[0] = scyc[0] & sstb[0] & !sDevice_stall[0] & host_req_i[0];
+
+    // Keep track of the Requests coming from either the Host core or DBG
+    // in order to keep cyc and stb asserted once per request
+      always_ff @( posedge clk_i ) begin : request_flop
+        if(!rst_ni) begin
+          request_in <= 'd0;
+        end else begin
+          if(host_req_i[IdxHost]) begin
+            request_in[IdxHost] <= 1'd1;
+          end
+          if(request_in[IdxHost] & wb_xbar_ack[IdxHost]) begin
+            request_in[IdxHost]<= 1'd0;
+          end
+        end
+      end
+
+    end // for NrHosts
+  endgenerate
 
   // Register to keep track of transactions completed
   logic transaction_in_prog;
@@ -201,13 +132,12 @@ module wbxbar_wrapper #(
     if(!rst_ni) begin
       transaction_in_prog <= 'd0;
     end else begin
-      if(!scyc[0] && transaction_in_prog) begin
+      if(!|scyc && transaction_in_prog) begin
         transaction_in_prog <= 1'd0;
       end else begin
-        if(scyc[0] & !transaction_in_prog) transaction_in_prog <= 1'd1;
+        if(|scyc & !transaction_in_prog) transaction_in_prog <= 1'd1;
       end
     end
-    
   end
 
   // Generate Xbar to Slave interface
@@ -226,6 +156,10 @@ module wbxbar_wrapper #(
       assign sDevice_err[IdxSlaves] = device_err_i[IdxSlaves];
     end
   endgenerate
+
+////////////////////////////////////////////////////////////
+// Wishbone Xbar
+////////////////////////////////////////////////////////////
 
   wbxbar #(
     .NM(NrHosts),

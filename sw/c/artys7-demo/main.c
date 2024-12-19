@@ -66,15 +66,15 @@ int wishbone_master_test() {
 int main(void) {
 
     // Create pointer to Memory location and write to it
-    volatile uint32_t* memptr = (volatile uint32_t*)0x44a00000;
-    *memptr = 0xdeadc0de;
+    // volatile uint32_t* memptr = (volatile uint32_t*)0x44a00000; // Writing to an invalid mem address will break the wbxbar
+    // *memptr = 0xdeadc0de;
 
     // Writes to GPIO
     volatile uint32_t* gpioptr = (volatile uint32_t*)GPIO_BASE_ADDR;
     *gpioptr = 0xbad0beef; 
 
     // // Exit
-    // puts("Hello Opal Test");
+    puts("Hello Opal Test");
 
     // pwm_example();
     int status = wishbone_master_test();
