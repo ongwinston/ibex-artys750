@@ -64,7 +64,7 @@ module wbxbar_wrapper #(
   logic [(NrHosts*DataWidth)-1 : 0]    wb_m_data;
   logic [NrHosts*(DataWidth/8)-1 : 0]  wb_m_sel;
 
-  logic [NrHosts-1:0]                  wb_xbar_stall;
+  // logic [NrHosts-1:0]                  wb_xbar_stall;
   logic [NrHosts-1:0]                  wb_xbar_ack;
   logic [(NrHosts*DataWidth)-1 : 0]    wb_xbar_data;
   logic [NrHosts-1:0]                  wb_xbar_err;
@@ -83,7 +83,7 @@ module wbxbar_wrapper #(
   logic [NrDevices-1 : 0]                 sDevice_valid;
   logic [(NrDevices*DataWidth)-1 : 0]     sDevice_rdata;
   logic [NrDevices-1 : 0]                 sDevice_err;
-  logic [NrDevices-1:0]                   sDevice_stall;
+  // logic [NrDevices-1:0]                   sDevice_stall;
 
   logic [NrHosts-1:0]                     request_in;
 
@@ -105,7 +105,7 @@ module wbxbar_wrapper #(
       assign host_rdata_o[IdxHost] = wb_xbar_data[(IdxHost*DataWidth) +: DataWidth];
       assign host_err_o[IdxHost] = wb_xbar_err[IdxHost];
 
-      assign host_gnt_o[IdxHost] = |scyc & |sstb & !|sDevice_stall & host_req_i[IdxHost];
+      assign host_gnt_o[IdxHost] = |scyc & |sstb/* & !|sDevice_stall*/ & host_req_i[IdxHost];
 
 
     // Keep track of the Requests coming from either the Host core or DBG
@@ -132,10 +132,10 @@ module wbxbar_wrapper #(
     if(!rst_ni) begin
       transaction_in_prog <= 'd0;
     end else begin
-      if(!|scyc && transaction_in_prog) begin
+      if((|scyc == 1'b0) && transaction_in_prog) begin
         transaction_in_prog <= 1'd0;
       end else begin
-        if(|scyc & !transaction_in_prog) transaction_in_prog <= 1'd1;
+        if((|scyc == 1'b1) & !transaction_in_prog) transaction_in_prog <= 1'd1;
       end
     end
   end
@@ -181,7 +181,7 @@ module wbxbar_wrapper #(
     .i_msel              (wb_m_sel),
 
     // Output to Master Slave Response
-    .o_mstall            (wb_xbar_stall),
+    .o_mstall            (/*wb_xbar_stall*/),
     .o_mack              (wb_xbar_ack),
     .o_mdata             (wb_xbar_data),
     .o_merr              (wb_xbar_err),
@@ -195,7 +195,7 @@ module wbxbar_wrapper #(
     .o_ssel               (ssel),
 
      // Responses from Slave
-    .i_sstall             (sDevice_stall),
+    .i_sstall             (/*sDevice_stall*/),
     .i_sack               (sDevice_valid),
     .i_sdata              (sDevice_rdata),
     .i_serr               (sDevice_err)
