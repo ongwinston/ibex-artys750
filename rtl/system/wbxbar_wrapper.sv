@@ -134,9 +134,7 @@ module wbxbar_wrapper #(
     end else begin
       if((|scyc == 1'b0) && transaction_in_prog) begin
         transaction_in_prog <= 1'd0;
-      end else begin
-        if((|scyc == 1'b1) & !transaction_in_prog) transaction_in_prog <= 1'd1;
-      end
+      end else if((|scyc == 1'b1) & !transaction_in_prog) transaction_in_prog <= 1'd1;
     end
   end
 
