@@ -19,7 +19,12 @@ module top_artys750 #(
   output        UART_TX,
   input         SPI_RX,
   output        SPI_TX,
-  output        SPI_SCK
+  output        SPI_SCK,
+  input         JTAG_TCK,
+  input         JTAG_TMS,
+  input         JTAG_TRSTN,
+  input         JTAG_TDI,
+  output        JTAG_TDO
 );
 
   logic clk_sys, rst_sys_n;
@@ -52,11 +57,11 @@ module top_artys750 #(
     .spi_tx_o (SPI_TX),
     .spi_sck_o(SPI_SCK),
 
-    .trst_ni(1'b1),
-    .tms_i  (1'b0),
-    .tck_i  (1'b0),
-    .td_i   (1'b0),
-    .td_o   ()
+    .trst_ni(JTAG_TRSTN),
+    .tms_i  (JTAG_TMS),
+    .tck_i  (JTAG_TCK),
+    .td_i   (JTAG_TDI),
+    .td_o   (JTAG_TDO)
   );
 
   // Generating the system clock and reset for the FPGA.
