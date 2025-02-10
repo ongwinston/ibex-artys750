@@ -65,11 +65,14 @@ module top_artys750 #(
   );
 
   // Generating the system clock and reset for the FPGA.
-  clkgen_xil7series clkgen(
-    .IO_CLK,
-    .IO_RST_N,
-    .clk_sys,
-    .rst_sys_n
+  clkgen_artys7 clkgen(
+    .clk_in1    (IO_CLK),
+    .resetn     (IO_RST_N),
+    .clk_out_50 (clk_sys),
+    // .rst_sys_n
+    .locked     (rst_sys_n)
   );
+
+
 
 endmodule
