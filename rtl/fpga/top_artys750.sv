@@ -78,5 +78,4 @@ module top_artys750 #(
     .locked     (rst_sys_n)
   );
 
-
 endmodule
