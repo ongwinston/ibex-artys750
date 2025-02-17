@@ -8,10 +8,8 @@
 #include "gpio.h"
 #include "pwm.h"
 #include "timer.h"
+#include "gpio.c"
 
-
-#define GPIO_BASE_ADDR 0x80000000;
-#define GPIO_END_ADDR 0x80000000 + 4*1024;
 
 void pwm_example() {
 
@@ -54,12 +52,12 @@ int main(void) {
     volatile uint32_t* memptr = 0x44a00000;
     *memptr = 0xdeadc0de;
 
-    // Writes to GPIO
-    volatile uint32_t* gpioptr = GPIO_BASE_ADDR;
-    *gpioptr = 0xbad0beef; 
 
     // Exit
     puts("Hello Opal Test");
+
+    // GPIO driver
+    drive_led();
 
     pwm_example();
 

@@ -27,18 +27,23 @@ module top_artys750 #(
   output        JTAG_TDO
 );
 
+  localparam GPIO_WIDTH = 8;
+
   logic clk_sys, rst_sys_n;
 
   logic [3:0] DISP_CTRL; // Do nothing
   logic [11:0] RGB_LED;
+  logic [GPIO_WIDTH-1:0] gpio_o;
 
   assign RGB_LED0 = RGB_LED[2:0];
   assign RGB_LED1 = RGB_LED[4:2];
 
+  assign LED = gpio_o[7:4];
+
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
-    .GpiWidth     ( 8            ),
-    .GpoWidth     ( 8            ),
+    .GpiWidth     ( GPIO_WIDTH   ),
+    .GpoWidth     ( GPIO_WIDTH   ),
     .PwmWidth     ( 12           ),
     .SRAMInitFile ( SRAMInitFile )
   ) u_ibex_demo_system (
@@ -49,7 +54,7 @@ module top_artys750 #(
     .uart_rx_i (UART_RX),
 
     //output
-    .gp_o     ({LED, DISP_CTRL}),
+    .gp_o     (gpio_o),
     .pwm_o    (RGB_LED),
     .uart_tx_o(UART_TX),
 
