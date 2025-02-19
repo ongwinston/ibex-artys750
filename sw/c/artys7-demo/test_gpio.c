@@ -2,6 +2,9 @@
     Arty S7 50 GPIO driver
 */
 
+#include <stdint.h>
+
+// #include "demo_system.h"
 // #include <stdbool.h>
 
 
@@ -24,7 +27,7 @@ int drive_led() {
 
     // Write to its data register
     // The first 16 bits of data written to GPIO get put on its output pins
-    *gpioptr = 0x00;
+    *gpioptr = 0xff;
 
     return 0;
 }
