@@ -3,5 +3,5 @@
 
 
 void test_uart(void) {
-    puts("Hello Opal Test");
+    puts("Hello Opal Test\n");
 }
