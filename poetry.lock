@@ -63,7 +63,7 @@ resolved_reference = "2a70c4421db186b4ec91c770addc89ec83f3818b"
 
 [[package]]
 name = "fusesoc"
-version = "0.4"
+version = "0.6"
 description = "FuseSoC is a package manager and a set of build tools for HDL (Hardware Description Language) code."
 optional = false
 python-versions = ">=3.6, <4"
@@ -75,13 +75,13 @@ develop = false
 edalize = ">=0.2.3"
 pyparsing = "*"
 pyyaml = "*"
-simplesat = ">=0.8.0"
+simplesat = ">=0.9.1"
 
 [package.source]
 type = "git"
 url = "https://github.com/lowRISC/fusesoc.git"
-reference = "ot-0.4"
-resolved_reference = "e20b92898f6d14574cca8d636a841845b0817585"
+reference = "ot-0.6"
+resolved_reference = "3c06ba65db5d983f0959fe2732b29118a88d594a"
 
 [[package]]
 name = "hjson"
@@ -455,4 +455,4 @@ test = ["pytest (>=6.0.0)", "setuptools (>=65)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "61c00721ed62dcfefe32e40e20f46c9bebe9886734cf4a0758889260e2c15d59"
+content-hash = "159e986bd5a81389723b9d4c395464d6e6aae9896007cc5808d63a2e48bd1242"
