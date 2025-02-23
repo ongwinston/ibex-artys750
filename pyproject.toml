@@ -16,8 +16,8 @@ dependencies = [
 "mako == 1.2.2",
 "pyyaml == 6.0",
 "wheel == 0.41.2",
-"edalize @ git+https://github.com/lowRISC/edalize.git@v0.4.0",
-"fusesoc @ git+https://github.com/lowRISC/fusesoc.git@ot-0.4",
+"edalize @ git+https://github.com/lowRISC/edalize.git@2a70c44",
+"fusesoc @ git+https://github.com/lowRISC/fusesoc.git@ot-0.6",
 "rpds-py == 0.13.2"
 ]
 
