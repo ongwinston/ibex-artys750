@@ -78,27 +78,4 @@ module top_artys750 #(
     .locked     (rst_sys_n)
   );
 
-`ifdef DEBUG
-  logic dbg_tdi_q1;
-  logic dbg_tms_q1;
-  logic dbg_tck_q1;
-  logic dbg_tdo_q1;
-  logic dbg_trst_ni_q1;
-
-  (* mark_debug = "true"  *)logic dbg_tdi_q2,dbg_tms_q2,dbg_tck_q2,dbg_tdo_q2, dbg_trst_ni_q2;
-
-  always_ff @( posedge clk_sys ) begin : g_ila_jtag_dbg
-    dbg_tdi_q1 <= JTAG_TDI;
-    dbg_tms_q1 <= JTAG_TMS;
-    dbg_tck_q1 <= JTAG_TCK;
-    dbg_tdo_q1 <= JTAG_TDO;
-    dbg_trst_ni_q1 <= JTAG_TRSTN;
-    dbg_tdi_q2 <= dbg_tdi_q1;
-    dbg_tms_q2 <= dbg_tms_q1;
-    dbg_tck_q2 <= dbg_tck_q1;
-    dbg_tdo_q2 <= dbg_tdo_q1;
-    dbg_trst_ni_q2 <= dbg_trst_ni_q1;
-  end
-`endif
-
 endmodule
