@@ -80,9 +80,7 @@ int myprintf(char* string) {
 }
 
 
-void test_uart(void) {
-    // puts("Hello Opal Test\n");
-
+void test_myprintf(void) {
     myprintf("test my print\n");
     char string_var = "a";
     myprintf(string_var);

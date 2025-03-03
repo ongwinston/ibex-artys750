@@ -1,2 +1,2 @@
-void test_uart(void);
+void test_myprintf(void);
 int myprintf();

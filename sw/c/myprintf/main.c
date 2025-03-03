@@ -12,7 +12,7 @@ int main(void) {
 
     int status = 0;
 
-    test_uart();
+    test_myprintf();
 
     while(1) {
         asm volatile("nop");
