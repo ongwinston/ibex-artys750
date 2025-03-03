@@ -15,23 +15,27 @@ int main(void) {
 
     int status = 0;
 
-    // Create pointer to Memory location and write to it
-    volatile uint32_t* memptr = (volatile uint32_t*)0x44a00000;
-    *memptr = 0xdeadc0de;
+    // // Create pointer to Memory location and write to it
+    // volatile uint32_t* memptr = (volatile uint32_t*)0x44a00000;
+    // *memptr = 0xdeadc0de;
 
-    status = drive_led();
+    // status = drive_led();
     test_uart();
 
     // HW-test PWM
-    pwm_example();
+    // pwm_example();
  
     // HW-test Wishbone Bus
-    status = wishbone_master_test();
+    // status = wishbone_master_test();
 
     // Delay to allow UART to finish transmitting
-    for(int i=0; i < 1000; i++) {
+    // for(int i=0; i < 10000; i++) {
+    //     asm volatile("nop");
+    // }
+    while(1) {
         asm volatile("nop");
     }
+
 
     return status;
 }
