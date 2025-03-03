@@ -19,14 +19,22 @@ int main(void) {
     // *memptr = 0xdeadc0de;
 
     // status = drive_led();
-    // test_uart();
+    test_uart();
 
+    // HW-test PWM
+    // pwm_example();
+ 
+    // HW-test Wishbone Bus
+    // status = wishbone_master_test();
+
+    // Delay to allow UART to finish transmitting
+    // for(int i=0; i < 10000; i++) {
+    //     asm volatile("nop");
+    // }
     while(1) {
         asm volatile("nop");
     }
 
 
-    puts("PROGRAM EXIT CODE:");
-    putchar(status);
     return status;
 }
