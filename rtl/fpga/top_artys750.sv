@@ -24,7 +24,8 @@ module top_artys750 #(
   input         JTAG_TMS,
   input         JTAG_TRSTN,
   input         JTAG_TDI,
-  output        JTAG_TDO
+  output        JTAG_TDO,
+  output        PMOD_JC
 );
 
   localparam GPIO_WIDTH = 8;
@@ -34,11 +35,19 @@ module top_artys750 #(
   logic [3:0] DISP_CTRL; // Do nothing
   logic [11:0] RGB_LED;
   logic [GPIO_WIDTH-1:0] gpio_o;
+  logic [23:0] led_shift_r = 'd0;
 
   assign RGB_LED0 = RGB_LED[2:0];
   assign RGB_LED1 = RGB_LED[4:2];
 
   assign LED = gpio_o[7:4];
+  assign PMOD_JC = led_shift_r[23];
+
+
+  // LED debug
+  always_ff @( posedge clk_sys ) begin : g_dbg_led
+    led_shift_r <= led_shift_r + 1'd1;
+  end
 
   // Instantiating the Ibex Demo System.
   ibex_demo_system #(
