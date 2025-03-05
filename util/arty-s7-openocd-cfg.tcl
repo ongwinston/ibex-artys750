@@ -11,7 +11,7 @@ adapter driver ftdi
 #adapter speed 30000
 
 # 1000 kHZ -> 1MHz
- adapter speed 1000
+adapter speed 1000
 
  
 # Using JTAG (also could be SWD)
