@@ -190,7 +190,7 @@ targets:
       - SRAMInitFile
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
     flags:
-      use_bscane_tap: true
+      use_bscane_tap: false
 
 
   sim:
