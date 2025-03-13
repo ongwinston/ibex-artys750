@@ -9,7 +9,7 @@
 
 
 int main(void) {
-
+    puts("\n----\n");
     int status = 0;
 
     test_myprintf();
