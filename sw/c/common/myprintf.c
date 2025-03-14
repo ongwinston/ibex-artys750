@@ -75,7 +75,7 @@ char print_int(int32_t val/* , char* buf_ptr */) {
             // This is the final digit so just print
             msb_digit = val;
         }
-        
+
         /* puts("divisor:0x"); */
         /* puthex(divisor); */
         /* puts("\n"); */
@@ -103,7 +103,7 @@ char print_int(int32_t val/* , char* buf_ptr */) {
 
 // Return Success or failure
 // Takes character string and variable list of arguments,
-// Creates a character buffer which then prints 
+// Creates a character buffer which then prints
 int myprintf(char* string, ...) {
 
     int32_t int_list_arg;

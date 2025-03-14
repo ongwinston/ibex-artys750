@@ -1,6 +1,5 @@
 add_executable(myprintf
     main.c
-    myprintf.c
     test_myprintf.c
 )
 
