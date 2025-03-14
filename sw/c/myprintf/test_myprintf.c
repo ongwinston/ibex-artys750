@@ -35,15 +35,17 @@ void test_myprintf(void) {
     // *memptr = 0xdeadc0de;
     // DEV_WRITE(0x80003000,0x0bad);
 
-    // int int_var = 123;
-    // int int_var2 = 9;
-    // myprintf("%d\n", int_var, NULL);
-    // puts("\n");
-    // myprintf("test my print int:%d, int2:%d \n", int_var, int_var2, NULL);
-    myprintf("%d", 9567982, NULL);
-    myprintf("%d", 54321, NULL);
-    myprintf("%d", 1000, NULL);
-    myprintf("%d", 1024, NULL);
+    int int_var = 123;
+    int int_var2 = 9;
+    myprintf("test %d\n", int_var, NULL);
+    myprintf("test my print int:%d, int2:%d, done\n", int_var, int_var2, NULL);
+    myprintf("%d \n", 9567982, NULL);
+    myprintf("%d\n", 54321, NULL);
+    myprintf("%d\n", 1000, NULL);
+    myprintf("%d\n", 1024, NULL);
+    int int_var3 = 7843; // 0x1ea3
+    int32_t int_var4 = -10241; // 0x2801
+    myprintf("%d,and Negative number: %d\n", int_var3, int_var4, NULL);
 
     puts("\nEND\n");
 }
