@@ -29,9 +29,10 @@ int main(void) {
     // HW-test Wishbone Bus
     // status = wishbone_master_test();
 
-    // HW-test PWM
-    pwm_example(); // Loops indefinitely
- 
+    while(1) {
+        asm volatile("nop");
+    }
+
 
     puts("PROGRAM EXIT CODE:");
     putchar(status);
