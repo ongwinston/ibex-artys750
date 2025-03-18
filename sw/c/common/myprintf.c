@@ -150,7 +150,8 @@ int myprintf(char* string, ...) {
             puts("UNSUPPORTED\n");
             break;
         case 'x': // Unsigned Hexadecimal
-            puts("UNSUPPORTED\n");
+            int_list_arg = va_arg(args, int32_t);
+            puthex(int_list_arg);
             break;
         case 'X': // Unsigned Hexadecimal Uppercase
             puts("UNSUPPORTED\n");
