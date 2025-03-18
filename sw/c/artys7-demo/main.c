@@ -12,7 +12,7 @@
 
 
 int main(void) {
-
+    puts("---\n");
     int status = 0;
 
     // // Create pointer to Memory location and write to it
@@ -28,10 +28,6 @@ int main(void) {
     // HW-test Wishbone Bus
     // status = wishbone_master_test();
 
-    // Delay to allow UART to finish transmitting
-    // for(int i=0; i < 10000; i++) {
-    //     asm volatile("nop");
-    // }
     while(1) {
         asm volatile("nop");
     }
