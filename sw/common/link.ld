@@ -7,8 +7,10 @@ OUTPUT_ARCH(riscv)
 MEMORY
 {
     /* 60 KiB should be enough for anybody... */
-    ram         : ORIGIN = 0x00100000, LENGTH = 0xE000 /* 56 KiB */
-    stack       : ORIGIN = 0x0010E000, LENGTH = 0x2000  /* 4 KiB */
+    /* ram         : ORIGIN = 0x00100000, LENGTH = 0xE000 /\* 56 KiB *\/ */
+    /* stack       : ORIGIN = 0x0010E000, LENGTH = 0x2000  /\* 4 KiB *\/ */
+    ram         : ORIGIN = 0x00100000, LENGTH = 0x1D000 /* 116 KiB */
+    stack       : ORIGIN = 0x0011D000, LENGTH = 0x3000  /* 12 KiB */
 }
 
 /* Stack information variables */
@@ -69,9 +71,10 @@ SECTIONS
         /* Rust dependency */
         KEEP(*(.init));
         KEEP(*(.init.rust));
-
+        _stext = .;
         *(.text)
         *(.text.*)
+        _etext = .;
         . = ALIGN(4);
     }  > ram
 

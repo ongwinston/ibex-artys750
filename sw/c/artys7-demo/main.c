@@ -12,7 +12,7 @@
 #include "romantoint.h"
 
 int main(void) {
-
+    puts("---\n");
     int status = 0;
 
     // // Create pointer to Memory location and write to it
@@ -29,9 +29,10 @@ int main(void) {
     // HW-test Wishbone Bus
     // status = wishbone_master_test();
 
-    // HW-test PWM
-    pwm_example(); // Loops indefinitely
- 
+    while(1) {
+        asm volatile("nop");
+    }
+
 
     puts("PROGRAM EXIT CODE:");
     putchar(status);
