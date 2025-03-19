@@ -4,7 +4,7 @@ add_executable(myprintf
 )
 
 target_include_directories(myprintf PUBLIC 
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../common
     )
 
 target_link_libraries(myprintf common)
