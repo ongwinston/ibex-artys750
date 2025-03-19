@@ -9,7 +9,6 @@
 #include "test_uart.h"
 #include "test_pwm.h"
 #include "test_wishbone.h"
-#include "romantoint.h"
 
 int main(void) {
     puts("---\n");
@@ -21,13 +20,6 @@ int main(void) {
 
     // status = drive_led();
     // test_uart();
-
-    if(testRomanToInt()) {
-        puts("FAILED\n");
-    }
-
-    // HW-test Wishbone Bus
-    // status = wishbone_master_test();
 
     while(1) {
         asm volatile("nop");

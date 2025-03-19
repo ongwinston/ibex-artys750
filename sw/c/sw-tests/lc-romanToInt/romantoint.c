@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include "demo_system.h"
+#include "myprintf.h"
 
 int chartoInt(char* s) {
     switch(*s) {
@@ -20,7 +21,7 @@ int chartoInt(char* s) {
         case 'M':
             return 1000;
         default:
-            puts("ERROR: Not supported String\n");
+            myprintf("ERROR: Not supported String\n");
             return 0;
     }
 
@@ -42,8 +43,6 @@ int chartoInt(char* s) {
     //  10) There is no numeral for zero
 
 int romanToInt(char* s) {
-    puts("*\n");
-
     int converted_int = 0;
     int current_int;
     int previous_int = 0;
@@ -72,57 +71,73 @@ int romanToInt(char* s) {
 
         previous_int = current_int;
         ptr++;
-        puts("val:");
-        puthex(converted_int);
-        puts("\n");
+        // myprintf("val:0x%x\n", converted_int);
+        // puthex(converted_int);
+        // myprintf("\n");
     }
 
     return converted_int;
 }
 
 int testRomanToInt(void) {
-    puts("START TEST\n");
+    myprintf("START TEST\n");
     int status = 0;
     int ret_integer;
 
     ret_integer = romanToInt("CLI"); // (151) = 100 + 50 + 1
     if(ret_integer != 151){
-        puts("Failed CLI (151)\n");
+        myprintf("Failed CLI (151)\n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'CLI', val:%d\n", ret_integer);
     }
     ret_integer = romanToInt("III"); //  1 + 1 + 1
     if(ret_integer != 3){
-        puts("Failed III (3)\n");
+        myprintf("Failed III (3)\n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'III', val:%d\n",ret_integer);
     }
     ret_integer = romanToInt("LVIII"); // 50 + 5 + 3
     if(ret_integer != 58){
-        puts("Failed LVIII (58) \n");
+        myprintf("Failed LVIII (58) \n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'LVIII', val:%d\n", ret_integer);
     }
     ret_integer = romanToInt("MCMXCIV"); // 1000(M) + 900(CM) + 90(XC) + 4(IV)
     if(ret_integer != 1994){
-        puts("Failed MCMXCIV (1994)\n");
+        myprintf("Failed MCMXCIV (1994)\n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'MCMXCIV', val:%d\n", ret_integer);
     }
     ret_integer = romanToInt("XVIII");
     if(ret_integer != 18){
-        puts("Failed XVIII (18)\n");
+        myprintf("Failed XVIII (18)\n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'XVIII', val:%d\n", ret_integer);
     }
     ret_integer = romanToInt("XXIV");
     if(ret_integer != 24){
-        puts("Failed XXIV (24)\n");
+        myprintf("Failed XXIV (24)\n");
         puthex(ret_integer);
         status = 1;
+    } else {
+        myprintf("Passed 'XXIV', val:%d\n", ret_integer);
     }
 
-    puts("\nEND\n");
+    if(status == 1) {
+        myprintf("Some FAILED\n");
+    } else {
+        myprintf("All PASSED\n");
+    }
     return status;
 }
 
