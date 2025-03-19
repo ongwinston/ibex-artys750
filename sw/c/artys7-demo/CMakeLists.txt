@@ -4,7 +4,6 @@ add_executable(artys7_demo
     test_pwm.c
     test_uart.c
     test_wishbone.c
-    romantoint.c
 )
 
 target_include_directories(artys7_demo PUBLIC 
