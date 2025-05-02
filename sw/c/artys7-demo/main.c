@@ -10,7 +10,6 @@
 #include "test_pwm.h"
 #include "test_wishbone.h"
 
-
 int main(void) {
     puts("---\n");
     int status = 0;

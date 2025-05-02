@@ -18,7 +18,6 @@ extern uint32_t _vectors_start;
 
 #define RAM_START 0x00100000
 
-
 uint32_t test_mem_addr(uint32_t addr, int32_t value) {
     // Write to ADDR
     DEV_WRITE(addr, value);
