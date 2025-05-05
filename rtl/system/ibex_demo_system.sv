@@ -572,16 +572,4 @@ module ibex_demo_system #(
     endfunction
   `endif
 
-
-////////////////////////////////////////////////////////////
-// Wave dump 
-////////////////////////////////////////////////////////////
-
-`ifdef VERILATOR
-  initial begin
-    $dumpfile("ibex-wave.vcd");
-    $dumpvars();
-  end
-`endif
-
 endmodule
