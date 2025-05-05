@@ -49,6 +49,7 @@ filesets:
       - lowrisc:ibex:fpga_xilinx_shared
     files:
       - rtl/fpga/top_artys750.sv
+      - rtl/fpga/clkgen_artys7.sv
     file_type: systemVerilogSource
 
 
@@ -90,6 +91,7 @@ filesets:
   files_constraints_artys750:
     files:
       - data/pins_artys750.xdc
+      - data/timing_artys750.xdc
     file_type: xdc
 
 parameters:
@@ -188,7 +190,7 @@ targets:
       - SRAMInitFile
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
     flags:
-      use_bscane_tap: true
+      use_bscane_tap: false
 
 
   sim:
