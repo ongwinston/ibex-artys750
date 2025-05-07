@@ -43,16 +43,18 @@ char convert_int_to_char(int value) {
     default:
         break;
     }
-    return  ascii_of_value; // ERROR
+    return  ascii_of_value;
 }
 
-char print_int(int32_t val/* , char* buf_ptr */) {
+char print_int(int32_t val) {
     uint32_t cnt = 0;
     int32_t tmp = val;
     float msb_digit;
     int32_t divisor = 0;
 
-    if(val < 0) {
+    if (val == 0) {
+        putchar(convert_int_to_char(0));
+    } else if(val < 0) {
         // Convert to positive
         val = ~val + 1;
     }
@@ -62,9 +64,6 @@ char print_int(int32_t val/* , char* buf_ptr */) {
         tmp /= 10;
         cnt++;
     }
-    // puts("counter:");
-    // puthex(cnt);
-    // puts("\n");
 
     // Now loop over each Digit and print it out
     while (cnt != 0) {
@@ -76,25 +75,9 @@ char print_int(int32_t val/* , char* buf_ptr */) {
             msb_digit = val;
         }
 
-        /* puts("divisor:0x"); */
-        /* puthex(divisor); */
-        /* puts("\n"); */
-        /* puts("val:0x"); */
-        /* puthex(val); */
-        /* puts("\n"); */
-        /* puts("msb_digit:0x"); */
-        /* puthex(msb_digit); */
-        /* puts("\n"); */
-
         putchar(convert_int_to_char(msb_digit)); // Return ASCII Char from int
 
         val = val - (msb_digit*divisor);
-        /* puts("New value val:0x"); */
-        /* puthex(val); */
-        /* puts("\n"); */
-        /* puts("Counter val:"); */
-        /* puthex(cnt); */
-        /* puts("\n"); */
         cnt--;
     }
     return (char)'0'; // TODO: Fix
@@ -107,21 +90,13 @@ char print_int(int32_t val/* , char* buf_ptr */) {
 int myprintf(char* string, ...) {
 
     int32_t int_list_arg;
-    // int sizeofstring = sizeof(string)/sizeof(string[0]);
 
     if(string == NULL) {
-    return 1; //ERROR
+        return 1; //ERROR
     }
 
     va_list args;
     va_start(args, string);
-
-    /* int buf_elements = 4; */
-    // Create a String array buffer to store the completed print
-    /* char* print_buf_ptr = (char*) malloc(buf_elements * sizeof(char)); */
-    /* if(print_buf_ptr == NULL) { */
-    /*   return NULL; */
-    /* } */
 
     // Iterate through String checking for format specifiers throughout
     while(*string) {
@@ -137,11 +112,6 @@ int myprintf(char* string, ...) {
                 putchar(45); // Print - sign
             }
             print_int(int_list_arg);
-            // puts("List Argument:0x");
-            // puthex(int_list_arg);
-            // puts("\n");
-            // putchar(int_list_arg);
-            // puts("*");
             break;
         case 'u': // Unsigned Decimal Integer
             puts("UNSUPPORTED\n");
@@ -190,117 +160,9 @@ int myprintf(char* string, ...) {
     } else {
         // Else just output the next char of the string
         putchar(*string);
-        /* print_buf_ptr = *string; */
-        /* print_buf_ptr++; */
     }
     string++;
     }
-    // puts(string);
     va_end(args);
-    /* free(print_buf_ptr); */
     return 0;
 }
-
-
-// void print_ascii(char s) {
-//     switch(s) {
-//         case '!':
-//             putchar(33);
-//             break;
-//         case '"':
-//             putchar(34);
-//             break;
-//         case '#':
-//             putchar(35);
-//             break;
-//         case '$':
-//             putchar(36);
-//             break;
-//         case '%':
-//             putchar(37);
-//             break;
-//         case '&':
-//             putchar(38);
-//             break;
-//         case '\'':
-//             putchar(39);
-//             break;
-//         case '(':
-//             putchar(40);
-//             break;
-//         case ')':
-//             putchar(41);
-//             break;
-//         case '*':
-//             putchar(42);
-//             break;
-//         case '+':
-//             putchar(43);
-//             break;
-//         case ',':
-//             putchar(44);
-//             break;
-//         case '-':
-//             putchar(45);
-//             break;
-//         case '.':
-//             putchar(46);
-//             break;
-//         case '/':
-//             putchar(47);
-//             break;
-//         case '0':
-//             putchar(48);
-//             break;
-//         case '1':
-//             putchar(49);
-//             break;
-//         case '2':
-//             putchar(50);
-//             break;
-//         case '3':
-//             putchar(51);
-//             break;
-//         case '4':
-//             putchar(52);
-//             break;
-//         case '5':
-//             putchar(53);
-//             break;
-//         case '6':
-//             putchar(54);
-//             break;
-//         case '7':
-//             putchar(55);
-//             break;
-//         case '8':
-//             putchar(56);
-//             break;
-//         case '9':
-//             putchar(57);
-//             break;
-//         case ':':
-//             putchar(58);
-//             break;
-//         case ';':
-//             putchar(59);
-//             break;
-//         case '<':
-//             putchar(60);
-//             break;
-//         case '=':
-//             putchar(61);
-//             break;
-//         case '>':
-//             putchar(62);
-//             break;
-//         case '?':
-//             putchar(63);
-//             break;
-//         case '@':
-//             putchar(64);
-//             break;
-//         default:
-//             break;
-//     }
-// }
