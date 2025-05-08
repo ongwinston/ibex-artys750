@@ -83,6 +83,110 @@ char print_int(int32_t val) {
     return (char)'0'; // TODO: Fix
 }
 
+void print_ascii(char s) {
+    switch(s) {
+        case '!':
+            putchar(33);
+            break;
+        case '"':
+            putchar(34);
+            break;
+        case '#':
+            putchar(35);
+            break;
+        case '$':
+            putchar(36);
+            break;
+        case '%':
+            putchar(37);
+            break;
+        case '&':
+            putchar(38);
+            break;
+        case '\'':
+            putchar(39);
+            break;
+        case '(':
+            putchar(40);
+            break;
+        case ')':
+            putchar(41);
+            break;
+        case '*':
+            putchar(42);
+            break;
+        case '+':
+            putchar(43);
+            break;
+        case ',':
+            putchar(44);
+            break;
+        case '-':
+            putchar(45);
+            break;
+        case '.':
+            putchar(46);
+            break;
+        case '/':
+            putchar(47);
+            break;
+        case '0':
+            putchar(48);
+            break;
+        case '1':
+            putchar(49);
+            break;
+        case '2':
+            putchar(50);
+            break;
+        case '3':
+            putchar(51);
+            break;
+        case '4':
+            putchar(52);
+            break;
+        case '5':
+            putchar(53);
+            break;
+        case '6':
+            putchar(54);
+            break;
+        case '7':
+            putchar(55);
+            break;
+        case '8':
+            putchar(56);
+            break;
+        case '9':
+            putchar(57);
+            break;
+        case ':':
+            putchar(58);
+            break;
+        case ';':
+            putchar(59);
+            break;
+        case '<':
+            putchar(60);
+            break;
+        case '=':
+            putchar(61);
+            break;
+        case '>':
+            putchar(62);
+            break;
+        case '?':
+            putchar(63);
+            break;
+        case '@':
+            putchar(64);
+            break;
+        default:
+            break;
+    }
+}
+
+
 
 // Return Success or failure
 // Takes character string and variable list of arguments,
@@ -151,8 +255,7 @@ int myprintf(char* string, ...) {
             puts("UNSUPPORTED\n");
             break;
         case '%': // Print '%'
-            // print_ascii('%');
-            puts("UNSUPPORTED\n");
+            print_ascii('%');
             break;
         default:
             break;
