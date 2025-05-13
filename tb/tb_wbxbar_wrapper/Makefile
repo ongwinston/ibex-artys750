@@ -23,9 +23,10 @@ ARGS += -s tb_wbxbar_wrapper
 
 ARGS += -DUVM_HDL_NO_DPI=1
 ARGS += -DUVM_CMDLINE_NO_DPI=1
+ARGS += -Wall
 
 icarus:
-	iverilog -v -g$(VERILOG_STANDARD) $(ARGS)  -c $(FILELIST) -o $(OUT_FILE)
+	iverilog -v -g$(VERILOG_STANDARD) $(ARGS)  -c $(FILELIST) -o $(OUT_FILE) -v
 
 icarus_sim: icarus
 	vvp $(OUT_FILE) -fst

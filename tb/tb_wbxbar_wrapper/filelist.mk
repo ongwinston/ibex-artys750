@@ -65,4 +65,4 @@ tb_wbxbar_wrapper.sv
 ../../sub-repos/wb2axip/rtl/wbxclk.v
 
 
-../../sub-repos/wb2axip/rtl/axlite_wrapper.vhd
+# ../../sub-repos/wb2axip/rtl/axlite_wrapper.vhd
