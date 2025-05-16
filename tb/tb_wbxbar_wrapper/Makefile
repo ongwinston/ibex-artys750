@@ -6,7 +6,7 @@
 ###########################################################################
 FILELIST=filelist.mk
 VERILOG_STANDARD=2012
-OUT_FILE=wbxbar_exe
+OUT_FILE=wb.icarus_sim
 UVM_PATH=/home/winston/Projects/tool-repos/UVM-1800.2-2020.3.1/1800.2-2020.3.1
 
 # Specify Include dir

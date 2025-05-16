@@ -101,16 +101,26 @@ module tb_wbxbar_wrapper ();
 
   initial begin
     start_test = 1'b0;
-    zero_unused_inputs();
+    zero_host_ports(0);
+    zero_host_ports(1);
+    zero_device_ports(0);
+
     #100ns start_test = 1'b1;
-    #100ns host_read();
+
+    @(posedge clk);
+    host_read();
     @ (posedge clk);
+
+    zero_host_ports(1);
+
+    @ (posedge clk);
+    @ (negedge clk);
   end
 
   initial begin
     #1000ns $finish();
   end
-  
+
   // Need to create these 1-D signals because Icarus doesnt dump them otherwise
   generate
     genvar host_index;
@@ -125,15 +135,15 @@ module tb_wbxbar_wrapper ();
       logic [31:0] host_rdata_dbg;
       logic        host_err_dbg;
 
-      assign host_req_dbg = host_req[host_index]; 
-      assign host_gnt_dbg = host_gnt[host_index]; 
-      assign host_addr_dbg = host_addr[host_index]; 
-      assign host_we_dbg = host_we[host_index]; 
-      assign host_be_dbg = host_be[host_index]; 
-      assign host_wdata_dbg = host_wdata[host_index]; 
-      assign host_rvalid_dbg = host_rvalid[host_index]; 
-      assign host_rdata_dbg = host_rdata[host_index]; 
-      assign host_err_dbg = host_err[host_index]; 
+      assign host_req_dbg = host_req[host_index];
+      assign host_gnt_dbg = host_gnt[host_index];
+      assign host_addr_dbg = host_addr[host_index];
+      assign host_we_dbg = host_we[host_index];
+      assign host_be_dbg = host_be[host_index];
+      assign host_wdata_dbg = host_wdata[host_index];
+      assign host_rvalid_dbg = host_rvalid[host_index];
+      assign host_rdata_dbg = host_rdata[host_index];
+      assign host_err_dbg = host_err[host_index];
     end
   endgenerate
 
@@ -173,19 +183,24 @@ module tb_wbxbar_wrapper ();
   //--------------------
   task host_read();
     host_req[1] <= 1'b1;
-    host_addr[1] <= 32'h00100000; // RAM address
+    host_addr[1] <= MEM_START;
     host_we[1] <= 1'b0;
     host_be[1] <= 4'b1111;
     host_wdata[1] <= 32'h0badbeef;
   endtask;
 
-  task zero_unused_inputs();
-    host_req[0] <= 1'b0;
-    host_addr[0] <= 'd0;
-    host_we[0] <= 'd0;
-    host_be[0] <= 'd0;
-    host_wdata[0] <= 'd0;
+  task zero_host_ports(int index);
+    host_req[index] <= 1'b0;
+    host_addr[index] <= 'd0;
+    host_we[index] <= 'd0;
+    host_be[index] <= 'd0;
+    host_wdata[index] <= 'd0;
+  endtask;
 
+  task zero_device_ports(int index);
+    device_rvalid[index] <= 1'b1;
+    device_rdata[index] <= 32'd0;
+    device_err[index] <= 1'b0;
   endtask;
 
   //-----------------------
