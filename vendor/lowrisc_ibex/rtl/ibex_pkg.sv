@@ -323,31 +323,31 @@ package ibex_pkg;
     logic [4:0] lower_cause;
   } exc_cause_t;
 
-  localparam exc_cause_t ExcCauseIrqSoftwareM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd03};
-  localparam exc_cause_t ExcCauseIrqTimerM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd07};
-  localparam exc_cause_t ExcCauseIrqExternalM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd11};
-  localparam exc_cause_t ExcCauseIrqNm =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd31};
+  localparam exc_cause_t ExcCauseIrqSoftwareM = {1'b1, 1'b0, 5'd03};
+    // '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd03};
+  localparam exc_cause_t ExcCauseIrqTimerM = {1'b1, 1'b0, 5'd07};
+    // '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd07};
+  localparam exc_cause_t ExcCauseIrqExternalM = {1'b1, 1'b0, 5'd31};
+    // '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd11};
+  localparam exc_cause_t ExcCauseIrqNm = {1'b1, 1'b0, 5'd31};
+    // '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd31};
 
-  localparam exc_cause_t ExcCauseInsnAddrMisa =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd00};
-  localparam exc_cause_t ExcCauseInstrAccessFault =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd01};
-  localparam exc_cause_t ExcCauseIllegalInsn =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd02};
-  localparam exc_cause_t ExcCauseBreakpoint =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd03};
-  localparam exc_cause_t ExcCauseLoadAccessFault  =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd05};
-  localparam exc_cause_t ExcCauseStoreAccessFault =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd07};
-  localparam exc_cause_t ExcCauseEcallUMode =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd08};
-  localparam exc_cause_t ExcCauseEcallMMode =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd11};
+  localparam exc_cause_t ExcCauseInsnAddrMisa = {1'b0, 1'b0, 5'd00};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd00};
+  localparam exc_cause_t ExcCauseInstrAccessFault = {1'b0, 1'b0, 5'd01};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd01};
+  localparam exc_cause_t ExcCauseIllegalInsn = {1'b0, 1'b0, 5'd02};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd02};
+  localparam exc_cause_t ExcCauseBreakpoint = {1'b0, 1'b0, 5'd03};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd03};
+  localparam exc_cause_t ExcCauseLoadAccessFault  = {1'b0, 1'b0, 5'd05};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd05};
+  localparam exc_cause_t ExcCauseStoreAccessFault = {1'b0, 1'b0, 5'd07};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd07};
+  localparam exc_cause_t ExcCauseEcallUMode = {1'b0, 1'b0, 5'd08};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd08};
+  localparam exc_cause_t ExcCauseEcallMMode = {1'b0, 1'b0, 5'd11};
+    // '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd11};
 
   // Internal NMI cause
   typedef enum logic [4:0] {

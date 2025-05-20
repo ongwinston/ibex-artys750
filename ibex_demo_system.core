@@ -68,6 +68,11 @@ filesets:
       - dv/verilator/ibex_demo_system_main.cc: { file_type: cppSource }
       - dv/verilator/demo_system_verilator_lint.vlt:  { file_type: vlt }
 
+  files_icarus:
+    files:
+      - tb/tb_arty_s7.sv
+    file_type: systemVerilogSource
+
   files_constraints:
     files:
       - data/pins_artya7.xdc
@@ -219,3 +224,27 @@ targets:
           - "--unroll-count 72"
     parameters:
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplGeneric
+
+
+  icarus_sim:
+    <<: *default_target
+    default_tool: iverilog
+    filesets_append:
+      - files_icarus
+    toplevel: tb_arty_s7
+    tools:
+      icarus:
+        iverilog_options:
+          - -g2012
+
+  xilinx_sim:
+    <<: *default_target
+    default_tool: xsim
+    filesets_append:
+      - files_xilinx_artys750
+      - files_icarus
+    toplevel: tb_arty_s7
+    tools:
+      xilinx:
+        xsim_options:
+        - '-v2'
