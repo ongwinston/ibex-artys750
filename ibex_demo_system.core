@@ -246,5 +246,9 @@ targets:
     toplevel: tb_arty_s7
     tools:
       xsim:
-        xsim_options:
+        xelab_options:
         - '-v2'
+        xsim_options:
+         #- '--gui'
+         #- '--view'
+
