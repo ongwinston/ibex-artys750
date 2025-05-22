@@ -245,6 +245,6 @@ targets:
       - files_icarus
     toplevel: tb_arty_s7
     tools:
-      xilinx:
+      xsim:
         xsim_options:
         - '-v2'
