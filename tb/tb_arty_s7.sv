@@ -4,7 +4,7 @@
 // 1Mhz = 1000ns
 // `define JTAG_HALF_CLK_PERIOD 500ns
 // Simulation JTAG clock period run at 10Mhz
-` define JTAG_HALF_CLK_PERIOD 50ns
+`define JTAG_HALF_CLK_PERIOD 50ns
 
 
 // `timescale 1ns/1ps
@@ -28,30 +28,52 @@ module tb_arty_s7
 
   
 
-  //----------------------------------
+  //---------------------
+  // Debug Helper Signals
+  //---------------------
+  logic dbg_signal_1 = 1'b0;
+
+  //----------------------------------------------------------------------------------------------------------------------------------------
   // JTAG sequences
-  //----------------------------------
+  //----------------------------------------------------------------------------------------------------------------------------------------
 
   // JTAG Reset
   task jtag_rst();
-    tms = 1'b1;
     trst_n = 1'b0;
     // Hold reset for 10 jtag cycles
-    for (int i=0; i < 20; i = i+1) begin
+    for (int i=0; i < 4; i = i+1) begin
+      #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    end
+    trst_n = 1'b1;
+      #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+      #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+  endtask
+
+  task jtag_test_logic_reset();
+    tms = 1'b1;
+    // Hold TMS high for 5 clock cycles
+    for (int i=0; i < 10; i = i+1) begin
+      #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    end
+    tms = 1'b0;
+    for (int i=0; i < 4; i = i+1) begin
       #`JTAG_HALF_CLK_PERIOD tck = ~tck;
     end
   endtask
 
+  // From Run-Test/IDLE clock in TMS=1 twice
   task jtag_select_ir_scan();
     tms = 1'b1;
-    #`JTAG_HALF_CLK_PERIOD tck = ~tck;
-    #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    for (int i=0; i < 4; i = i+1) begin
+      #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    end
     tms = 1'b0;
+    @(posedge clk);
   endtask
 
-  //----------------------------------
+  //----------------------------------------------------------------------------------------------------------------------------------------
   // Clock and Reset driving logic
-  //----------------------------------
+  //----------------------------------------------------------------------------------------------------------------------------------------
 
   // Reset
   task hw_reset();
@@ -70,10 +92,19 @@ module tb_arty_s7
     end
   end
 
+  task shift_tdi(input data);
+    tdi = data;
+     #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    tdi = 1'b0;
+  endtask
 
-  //----------------------------------
+
+
+  //----------------------------------------------------------------------------------------------------------------------------------------
   // Testbench
-  //----------------------------------
+  //----------------------------------------------------------------------------------------------------------------------------------------
+
   initial begin
     tck = 1'b0;
     tms = 1'b0;
@@ -86,11 +117,32 @@ module tb_arty_s7
     repeat (10) @(posedge clk);
     jtag_rst();
 
-    // Select IR-SCAN
+    repeat (5) @(posedge clk);
+    jtag_test_logic_reset();
+    repeat (5) @(posedge clk);
+
+    // Select IR Scan
     jtag_select_ir_scan();
 
-    // Now do the Jtag Reset sequence
+    // Scan in some TDI data
+    shift_tdi(1'b1);
+    shift_tdi(1'b1);
+    shift_tdi(1'b1);
+    shift_tdi(1'b0);
+    shift_tdi(1'b0);
+    shift_tdi(1'b1);
+    shift_tdi(1'b1);
+    shift_tdi(1'b1);
+    dbg_signal_1 = 1'b1;
+    
+    // Assert TMS to end IR Scan
+    tms = 1'b1;
+    #`JTAG_HALF_CLK_PERIOD tck = ~tck;
+    #`JTAG_HALF_CLK_PERIOD tck = ~tck;
 
+
+
+    /* Simulation END */
     #10us $finish();
   end
 
@@ -105,9 +157,9 @@ module tb_arty_s7
   end
 
 
-  //---------------------
+  //---------------------------------------------------------------------------------------------------------------------------
   // DUT
-  //---------------------
+  //---------------------------------------------------------------------------------------------------------------------------
 
   ibex_demo_system #(
     .GpiWidth       (GPI_WIDTH),
