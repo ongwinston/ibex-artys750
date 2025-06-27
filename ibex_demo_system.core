@@ -248,6 +248,7 @@ targets:
       xsim:
         xelab_options:
         - '-v2'
+        - '-d ICARUS=1'
         xsim_options:
          #- '--gui'
          #- '--view'
