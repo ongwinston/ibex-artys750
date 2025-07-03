@@ -235,7 +235,7 @@ targets:
 
   icarus_sim:
     <<: *default_target
-    default_tool: iverilog
+    default_tool: icarus
     filesets_append:
       - files_icarus
     toplevel: tb_top.sv
