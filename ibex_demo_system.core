@@ -70,7 +70,14 @@ filesets:
 
   files_icarus:
     files:
-      - tb/tb_arty_s7.sv
+      - tb/tb_top.sv
+      - tb/driver.sv
+      - tb/environment.sv
+      - tb/interface.sv
+      - tb/monitor.sv
+      - tb/scoreboard.sv
+      - tb/transactor_arty.sv
+      - tb/generator.sv
     file_type: systemVerilogSource
 
   files_constraints:
@@ -231,7 +238,7 @@ targets:
     default_tool: iverilog
     filesets_append:
       - files_icarus
-    toplevel: tb_arty_s7
+    toplevel: tb_top.sv
     tools:
       icarus:
         iverilog_options:
@@ -243,7 +250,7 @@ targets:
     filesets_append:
       - files_xilinx_artys750
       - files_icarus
-    toplevel: tb_arty_s7
+    toplevel: tb_top.sv
     tools:
       xsim:
         xelab_options:
