@@ -1,7 +1,7 @@
 
 
-`include "interface.sv"
-
+// `include "interface.sv"
+`include "transaction.sv"
 
 module tb_top;
 
@@ -11,21 +11,22 @@ module tb_top;
   localparam CLOCK_FREQ = 50_000_000;
   localparam BAUD_RATE = 115_200;
 
-  bit clk;
-  bit reset;
+  logic clk;
+  logic reset_n;
 
   // Clock Generatation
   always #5 clk = ~clk;
 
   // Reset Generation
   initial begin
-    reset = 1;
-    #5 reset = 0;
+    clk = 1'b0;
+    reset_n = 1'b0;
+    #5 reset_n = 1'b1;
   end
 
 
   // Interface
-  jtag_intf intf(clk, reset);
+  // jtag_intf intf(clk, reset);
 
 
   //---------------------------------------------------------------------------------------------------------------------------
@@ -53,11 +54,11 @@ module tb_top;
     .spi_tx_o        (/*UNCONNECTED*/),
     .spi_sck_o       (/*UNCONNECTED*/),
 
-    .tck_i           (intf.tck),    // JTAG test clock pad
-    .tms_i           (intf.tms),    // JTAG test mode select pad
-    .trst_ni         (),  // JTAG test reset pad
-    .td_i            (intf.tdi),     // JTAG test data input pad
-    .td_o            (intf.tdo)      // JTAG test data output pad
+    .tck_i           (/*intf.tck*/),    // JTAG test clock pad
+    .tms_i           (/*intf.tms*/),    // JTAG test mode select pad
+    .trst_ni         (/*        */),  // JTAG test reset pad
+    .td_i            (/*intf.tdi*/),     // JTAG test data input pad
+    .td_o            (/*intf.tdo*/)      // JTAG test data output pad
   );
 
 
@@ -66,9 +67,20 @@ module tb_top;
   //---------------------
   // Waveform dump
   //---------------------
+
+  /*
+   * We dont run this testbench with the Ibex Verilator system so which has an option to dump the waveform
+   * so lets declare our waveform here.
+   * Found in build/lowrisc_ibex_demo_system_0/xilinx_sim-xsim
+   */
   initial begin
     $dumpfile("dump.vcd");
     $dumpvars(0);
+  end
+
+
+  initial begin
+    #1000 $finish();
   end
 
 endmodule

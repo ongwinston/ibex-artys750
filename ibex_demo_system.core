@@ -70,15 +70,28 @@ filesets:
 
   files_icarus:
     files:
-      - tb/tb_top.sv
       - tb/driver.sv
       - tb/environment.sv
       - tb/interface.sv
       - tb/monitor.sv
       - tb/scoreboard.sv
-      - tb/transactor_arty.sv
+      - tb/transaction.sv
       - tb/generator.sv
+      - tb/tb_top.sv
     file_type: systemVerilogSource
+
+  files_xelab:
+    files:
+      - tb/driver.sv
+      - tb/environment.sv
+      - tb/interface.sv
+      - tb/monitor.sv
+      - tb/scoreboard.sv
+      - tb/transaction.sv
+      - tb/generator.sv
+      - tb/tb_top.sv
+    file_type: systemVerilogSource
+
 
   files_constraints:
     files:
@@ -233,29 +246,32 @@ targets:
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplGeneric
 
 
+  # Icarus sim will not be able to compile the Ibex System Verilog code
+  # As some system verilog features are not supported
   icarus_sim:
     <<: *default_target
     default_tool: icarus
     filesets_append:
       - files_icarus
-    toplevel: tb_top.sv
+    toplevel: tb_top
     tools:
       icarus:
         iverilog_options:
           - -g2012
+          - -D ICARUS=1
 
   xilinx_sim:
     <<: *default_target
     default_tool: xsim
     filesets_append:
       - files_xilinx_artys750
-      - files_icarus
-    toplevel: tb_top.sv
+      - files_xelab
+    toplevel: tb_top
     tools:
       xsim:
         xelab_options:
-        - '-v2'
-        - '-d ICARUS=1'
+          - '-v2'
+          - '-d ICARUS=1'
         xsim_options:
          #- '--gui'
          #- '--view'
