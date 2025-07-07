@@ -1,7 +1,7 @@
 
 
 // `include "interface.sv"
-`include "transaction.sv"
+// `include "transaction.sv"
 
 module tb_top;
 
@@ -26,7 +26,9 @@ module tb_top;
 
 
   // Interface
-  // jtag_intf intf(clk, reset);
+  jtag_intf intf(clk, reset);
+
+  test t1(intf);
 
 
   //---------------------------------------------------------------------------------------------------------------------------
@@ -54,11 +56,11 @@ module tb_top;
     .spi_tx_o        (/*UNCONNECTED*/),
     .spi_sck_o       (/*UNCONNECTED*/),
 
-    .tck_i           (/*intf.tck*/),    // JTAG test clock pad
-    .tms_i           (/*intf.tms*/),    // JTAG test mode select pad
-    .trst_ni         (/*        */),  // JTAG test reset pad
-    .td_i            (/*intf.tdi*/),     // JTAG test data input pad
-    .td_o            (/*intf.tdo*/)      // JTAG test data output pad
+    .tck_i           (intf.tck),    // JTAG test clock pad
+    .tms_i           (intf.tms),    // JTAG test mode select pad
+    .trst_ni         (intf.trstn),  // JTAG test reset pad
+    .td_i            (intf.tdi),     // JTAG test data input pad
+    .td_o            (intf.tdo)      // JTAG test data output pad
   );
 
 

@@ -1,4 +1,4 @@
-
+`include "transaction.sv"
 
 class driver;
 
@@ -16,5 +16,33 @@ class driver;
     // Getting the mailbox handle from environment
     this.gen2driv = gen2driv;
   endfunction
+
+
+  // Reset the interface signals
+  task reset;
+    wait(jtag_vif.reset);
+    wait(!jtag_vif.reset);
+  endtask
+
+  task drive;
+    transaction trans;
+    gen2driv.get(trans);
+  endtask
+
+
+  task main;
+    forever begin
+      fork
+        begin
+          wait(jtag_vif.reset);
+        end
+        begin
+          forever
+            drive();
+        end
+      join_any
+      disable fork;
+    end
+  endtask
 
 endclass

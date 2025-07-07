@@ -90,6 +90,8 @@ filesets:
       - tb/transaction.sv
       - tb/generator.sv
       - tb/tb_top.sv
+      - tb/test1.sv
+      - tb/random_test.sv
     file_type: systemVerilogSource
 
 

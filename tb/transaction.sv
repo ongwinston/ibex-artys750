@@ -1,7 +1,12 @@
+`ifndef TRANSACTION_SV
+`define TRANSACTION_SV
+
 class transaction;
 
-  logic tdi;
+  rand logic tdi;
   logic tdo;
-  logic tms;
+  rand logic tms;
 
 endclass
+
+`endif
