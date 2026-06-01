@@ -77,3 +77,12 @@ lint_off -file "*/lowrisc_prim_*/rtl/*.sv"
 
 lint_off -rule UNUSED -file "*/rtl/ibex_top_tracing.sv" -match "*RndCnstLfsrSeed*"
 lint_off -rule UNUSED -file "*/rtl/ibex_top_tracing.sv" -match "*RndCnstLfsrPerm*"
+
+// The UNOPTFLAT warnings are expected.
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_id_stage.sv" -match "*instr_executing_spec*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_controller.sv" -match "*special_req*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_controller.sv" -match "*id_in_ready_o*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_if_stage.sv" -match "*fetch_ready*"
+lint_off -rule UNOPTFLAT -file "*/system/dm_top.sv" -match "*clear_resumeack*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_id_stage.sv" -match "*instr_done*"
+
