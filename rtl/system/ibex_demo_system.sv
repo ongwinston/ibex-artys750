@@ -71,9 +71,9 @@ module ibex_demo_system #(
   parameter logic [31:0] SIM_CTRL_START = 32'h20000;
   parameter logic [31:0] SIM_CTRL_MASK  = ~(SIM_CTRL_SIZE-1);
 
-  parameter logic [31:0] WISHBONEM_SIZE  =  4 * 1024; //  4 KiB
-  parameter logic [31:0] WISHBONEM_START = 32'h80005000;
-  parameter logic [31:0] WISHBONEM_MASK  = ~(WISHBONEM_SIZE-1);
+  parameter logic [31:0] MATH_MODULE_SIZE  =  4 * 1024; //  4 KiB
+  parameter logic [31:0] MATH_MODULE_START = 32'h80005000;
+  parameter logic [31:0] MATH_MODULE_MASK  = ~(MATH_MODULE_SIZE-1);
 
   // Debug functionality is optional.
   localparam bit DBG = 1;
@@ -94,7 +94,7 @@ module ibex_demo_system #(
     Spi,
     SimCtrl,
     DbgDev,
-    WishBoneM
+    MathModule
   } bus_device_e;
 
   localparam int NrDevices = DBG ? 9 : 8;
@@ -169,8 +169,8 @@ module ibex_demo_system #(
   assign cfg_device_addr_mask[Spi]       = SPI_MASK;
   assign cfg_device_addr_base[SimCtrl]   = SIM_CTRL_START;
   assign cfg_device_addr_mask[SimCtrl]   = SIM_CTRL_MASK;
-  assign cfg_device_addr_base[WishBoneM] = WISHBONEM_START;
-  assign cfg_device_addr_mask[WishBoneM] = WISHBONEM_MASK;
+  assign cfg_device_addr_base[MathModule] = MATH_MODULE_START;
+  assign cfg_device_addr_mask[MathModule] = MATH_MODULE_MASK;
 
 
   if (DBG) begin : g_dbg_device_cfg
@@ -186,7 +186,7 @@ module ibex_demo_system #(
   assign device_err[Uart]      = 1'b0;
   assign device_err[Spi]       = 1'b0;
   assign device_err[SimCtrl]   = 1'b0;
-  assign device_err[WishBoneM] = 1'b0;
+  assign device_err[MathModule] = 1'b0;
 
   bus #(
     .NrDevices    ( NrDevices ),
@@ -408,6 +408,22 @@ module ibex_demo_system #(
     .sck_o   (spi_sck_o), // Serial clock pin.
 
     .byte_data_o() // Unused.
+  );
+
+
+  math_module #(
+  ) u_math_module (
+    .clk_i (clk_sys_i),
+    .rst_ni(rst_sys_ni),
+
+    .device_req_i   (device_req[MathModule]),
+    .device_addr_i  (device_addr[MathModule]),
+    .device_we_i    (device_we[MathModule]),
+    .device_be_i    (device_be[MathModule]),
+    .device_wdata_i (device_wdata[MathModule]),
+    .device_rvalid_o(device_rvalid[MathModule]),
+    .device_rdata_o (device_rdata[MathModule])
+
   );
 
   `ifdef VERILATOR

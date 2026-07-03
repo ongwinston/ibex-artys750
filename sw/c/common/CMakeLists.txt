@@ -7,5 +7,6 @@ add_library(common OBJECT
      spi.c
      crt0.S
      myprintf.c
+     math_module.c
      )
 target_include_directories(common INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
